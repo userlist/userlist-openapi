@@ -139,9 +139,5 @@ components:
 security:
   - pushKey: []
 tags:
-  - name: api
-  - name: messaging
-  - name: tracking
-  - name: userlist
   - name: user
   - name: company
