@@ -27,8 +27,8 @@ paths:
           description: Accepted
         '401':
           $ref: '#/components/responses/Unauthorized'
-        '412':
-          $ref: '#/components/responses/PreconditionFailed'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
       tags:
         - user
   /companies:
@@ -48,8 +48,8 @@ paths:
           description: Accepted
         '401':
           $ref: '#/components/responses/Unauthorized'
-        '412':
-          $ref: '#/components/responses/PreconditionFailed'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
       tags:
         - company
 components:
@@ -130,8 +130,8 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-    PreconditionFailed:
-      description: Precondition Failed
+    UnprocessableEntity:
+      description: Unprocessable Entity
       content:
         application/json:
           schema:
