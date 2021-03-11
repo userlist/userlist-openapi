@@ -1,0 +1,100 @@
+openapi: 3.0.0
+info:
+  title: Userlist Push API
+  version: '1.0'
+  contact:
+    name: Userlist
+    url: 'https://userlist.com'
+    email: support@userlist.com
+  description: 'Userlist''s Push API allows you to send data into Userlist. '
+servers:
+  - url: 'https://push.userlist.com'
+paths:
+  /users:
+    post:
+      summary: Create New User
+      operationId: post-users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+            examples: {}
+        description: Post the necessary fields for the API to create a new user.
+      description: Create a new user.
+      responses:
+        '202':
+          description: Accepted
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '412':
+          $ref: '#/components/responses/PreconditionFailed'
+      tags:
+        - user
+components:
+  schemas:
+    User:
+      title: User
+      type: object
+      description: ''
+      x-examples: {}
+      properties:
+        identifier:
+          oneOf:
+            - type: string
+            - type: number
+        properties:
+          type: object
+        email:
+          type: string
+          format: email
+        signed_up_at:
+          type: string
+          format: date-time
+        last_seen_at:
+          type: string
+          format: date-time
+        unsubscribed_at:
+          type: string
+          format: date-time
+      required:
+        - identifier
+    Error:
+      title: Error
+      type: object
+      properties:
+        status:
+          type: integer
+        code:
+          type: string
+        errors:
+          type: array
+          items:
+            type: string
+  securitySchemes:
+    pushKey:
+      type: apiKey
+      name: Authorization
+      in: header
+      description: Prefix the Push Key with the keyword "Push" to indicate its type.
+  responses:
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    PreconditionFailed:
+      description: Precondition Failed
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+security:
+  - pushKey: []
+tags:
+  - name: api
+  - name: messaging
+  - name: tracking
+  - name: userlist
+  - name: user
