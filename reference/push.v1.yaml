@@ -12,8 +12,8 @@ servers:
 paths:
   /users:
     post:
-      summary: Create New User
-      operationId: post-users
+      summary: Create or update a user
+      operationId: push-user
       requestBody:
         content:
           application/json:
@@ -21,7 +21,7 @@ paths:
               $ref: '#/components/schemas/User'
             examples: {}
         description: Post the necessary fields for the API to create a new user.
-      description: Create a new user.
+      description: Create or update a user.
       responses:
         '202':
           description: Accepted
@@ -31,6 +31,27 @@ paths:
           $ref: '#/components/responses/PreconditionFailed'
       tags:
         - user
+  /companies:
+    post:
+      summary: Create or update a company
+      operationId: push-company
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Company'
+            examples: {}
+        description: Post the necessary fields for the API to create a new company.
+      description: Create or update a company.
+      responses:
+        '202':
+          description: Accepted
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '412':
+          $ref: '#/components/responses/PreconditionFailed'
+      tags:
+        - company
 components:
   schemas:
     User:
@@ -48,6 +69,31 @@ components:
         email:
           type: string
           format: email
+        signed_up_at:
+          type: string
+          format: date-time
+        last_seen_at:
+          type: string
+          format: date-time
+        unsubscribed_at:
+          type: string
+          format: date-time
+      required:
+        - identifier
+    Company:
+      title: Company
+      type: object
+      description: ''
+      x-examples: {}
+      properties:
+        identifier:
+          oneOf:
+            - type: string
+            - type: number
+        properties:
+          type: object
+        name:
+          type: string
         signed_up_at:
           type: string
           format: date-time
@@ -98,3 +144,4 @@ tags:
   - name: tracking
   - name: userlist
   - name: user
+  - name: company
