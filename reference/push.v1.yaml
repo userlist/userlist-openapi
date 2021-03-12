@@ -52,6 +52,46 @@ paths:
           $ref: '#/components/responses/UnprocessableEntity'
       tags:
         - company
+  /relationships:
+    post:
+      summary: Create or update a relationship
+      description: Create or update a relationship
+      tags:
+        - relationship
+      responses:
+        '202':
+          description: Accepted
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+      operationId: push-relationship
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Relationship'
+            examples: {}
+  /events:
+    post:
+      summary: Create an event
+      description: Create an event
+      tags:
+        - event
+      responses:
+        '202':
+          description: Accepted
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+      operationId: push-event
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Event'
+            examples: {}
 components:
   schemas:
     User:
@@ -78,6 +118,20 @@ components:
         unsubscribed_at:
           type: string
           format: date-time
+        company:
+          oneOf:
+            - $ref: '#/components/schemas/Company/properties/identifier'
+            - $ref: '#/components/schemas/Company'
+        companies:
+          type: array
+          items:
+            oneOf:
+              - $ref: '#/components/schemas/Company/properties/identifier'
+              - $ref: '#/components/schemas/Company'
+        relationships:
+          type: array
+          items:
+            $ref: '#/components/schemas/Relationship'
       required:
         - identifier
     Company:
@@ -103,8 +157,60 @@ components:
         unsubscribed_at:
           type: string
           format: date-time
+        user:
+          oneOf:
+            - $ref: '#/components/schemas/Company/properties/identifier'
+            - $ref: '#/components/schemas/Company'
+        users:
+          type: array
+          items:
+            oneOf:
+              - $ref: '#/components/schemas/Company/properties/identifier'
+              - $ref: '#/components/schemas/Company'
+        relationships:
+          type: array
+          items:
+            $ref: '#/components/schemas/Relationship'
       required:
         - identifier
+    Relationship:
+      title: Relationship
+      type: object
+      properties:
+        properties:
+          type: object
+        user:
+          oneOf:
+            - $ref: '#/components/schemas/User/properties/identifier'
+            - $ref: '#/components/schemas/User'
+        company:
+          oneOf:
+            - $ref: '#/components/schemas/Company/properties/identifier'
+            - $ref: '#/components/schemas/Company'
+    Event:
+      title: Event
+      type: object
+      properties:
+        name:
+          type: string
+        properties:
+          type: object
+        user:
+          oneOf:
+            - $ref: '#/components/schemas/User/properties/identifier'
+            - $ref: '#/components/schemas/User'
+        company:
+          oneOf:
+            - $ref: '#/components/schemas/Company/properties/identifier'
+            - $ref: '#/components/schemas/Company'
+        occured_at:
+          type: string
+          format: date-time
+      required:
+        - name
+      anyOf:
+        - required: [user]
+        - required: [company]
     Error:
       title: Error
       type: object
@@ -141,3 +247,5 @@ security:
 tags:
   - name: user
   - name: company
+  - name: relationship
+  - name: event
