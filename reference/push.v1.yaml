@@ -31,6 +31,26 @@ paths:
           $ref: '#/components/responses/UnprocessableEntity'
       tags:
         - user
+  /users/{user-identifier}:
+    delete:
+      summary: Delete a user
+      operationId: delete-user
+      parameters:
+        - in: path
+          required: true
+          name: user-identifier
+          schema:
+            oneOf:
+              - type: string
+              - type: number
+          style: simple
+      responses:
+        '202':
+          description: Accepted
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+      tags:
+        - user
   /companies:
     post:
       summary: Create or update a company
@@ -50,6 +70,26 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '422':
           $ref: '#/components/responses/UnprocessableEntity'
+      tags:
+        - company
+  /companies/{company-identifier}:
+    delete:
+      summary: Delete a company
+      operationId: delete-company
+      parameters:
+        - in: path
+          required: true
+          name: company-identifier
+          schema:
+            oneOf:
+              - type: string
+              - type: number
+          style: simple
+      responses:
+        '202':
+          description: Accepted
+        '401':
+          $ref: '#/components/responses/Unauthorized'
       tags:
         - company
   /relationships:
@@ -72,6 +112,34 @@ paths:
             schema:
               $ref: '#/components/schemas/Relationship'
             examples: {}
+  /relationships/{user-identifier}/{company-identifier}:
+    delete:
+      summary: Delete a relationship
+      operationId: delete-relationship
+      parameters:
+        - in: path
+          required: true
+          name: user-identifier
+          schema:
+            oneOf:
+              - type: string
+              - type: number
+          style: simple
+        - in: path
+          required: true
+          name: company-identifier
+          schema:
+            oneOf:
+              - type: string
+              - type: number
+          style: simple
+      responses:
+        '202':
+          description: Accepted
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+      tags:
+        - relationship
   /events:
     post:
       summary: Create an event
@@ -98,7 +166,6 @@ components:
       title: User
       type: object
       description: ''
-      x-examples: {}
       properties:
         identifier:
           oneOf:
@@ -118,27 +185,31 @@ components:
         unsubscribed_at:
           type: string
           format: date-time
-        company:
-          oneOf:
-            - $ref: '#/components/schemas/Company/properties/identifier'
-            - $ref: '#/components/schemas/Company'
-        companies:
-          type: array
-          items:
-            oneOf:
-              - $ref: '#/components/schemas/Company/properties/identifier'
-              - $ref: '#/components/schemas/Company'
-        relationships:
-          type: array
-          items:
-            $ref: '#/components/schemas/Relationship'
       required:
         - identifier
+      oneOf:
+        - properties:
+            company:
+              oneOf:
+                - $ref: '#/components/schemas/Company/properties/identifier'
+                - $ref: '#/components/schemas/Company'
+        - properties:
+            companies:
+              type: array
+              items:
+                oneOf:
+                  - $ref: '#/components/schemas/Company/properties/identifier'
+                  - $ref: '#/components/schemas/Company'
+        - properties:
+            relationships:
+              type: array
+              items:
+                $ref: '#/components/schemas/Relationship'
+
     Company:
       title: Company
       type: object
       description: ''
-      x-examples: {}
       properties:
         identifier:
           oneOf:
@@ -157,22 +228,26 @@ components:
         unsubscribed_at:
           type: string
           format: date-time
-        user:
-          oneOf:
-            - $ref: '#/components/schemas/Company/properties/identifier'
-            - $ref: '#/components/schemas/Company'
-        users:
-          type: array
-          items:
-            oneOf:
-              - $ref: '#/components/schemas/Company/properties/identifier'
-              - $ref: '#/components/schemas/Company'
-        relationships:
-          type: array
-          items:
-            $ref: '#/components/schemas/Relationship'
       required:
         - identifier
+      oneOf:
+        - properties:
+            user:
+              oneOf:
+                - $ref: '#/components/schemas/User/properties/identifier'
+                - $ref: '#/components/schemas/User'
+        - properties:
+            users:
+              type: array
+              items:
+                oneOf:
+                  - $ref: '#/components/schemas/User/properties/identifier'
+                  - $ref: '#/components/schemas/User'
+        - properties:
+            relationships:
+              type: array
+              items:
+                $ref: '#/components/schemas/Relationship'
     Relationship:
       title: Relationship
       type: object
@@ -195,22 +270,26 @@ components:
           type: string
         properties:
           type: object
-        user:
-          oneOf:
-            - $ref: '#/components/schemas/User/properties/identifier'
-            - $ref: '#/components/schemas/User'
-        company:
-          oneOf:
-            - $ref: '#/components/schemas/Company/properties/identifier'
-            - $ref: '#/components/schemas/Company'
         occured_at:
           type: string
           format: date-time
       required:
         - name
       anyOf:
-        - required: [user]
-        - required: [company]
+        - properties:
+            user:
+              oneOf:
+                - $ref: '#/components/schemas/User/properties/identifier'
+                - $ref: '#/components/schemas/User'
+          required:
+            - user
+        - properties:
+            company:
+              oneOf:
+                - $ref: '#/components/schemas/Company/properties/identifier'
+                - $ref: '#/components/schemas/Company'
+          required:
+            - company
     Error:
       title: Error
       type: object
