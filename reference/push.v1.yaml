@@ -177,11 +177,25 @@ components:
             email:
               type: string
               format: email
+            identifiers:
+              type: array
+              items:
+                type: object
+                properties:
+                  identifier:
+                    $ref: '#/components/schemas/IdentifierValue'
+                  scope:
+                    type: string
+                required:
+                  - identifier
+                  - scope
         - oneOf:
           - required:
             - email
           - required:
             - identifier
+          - required:
+            - identifiers
     User:
       title: User
       type: object
@@ -225,8 +239,23 @@ components:
       properties:
         identifier:
           $ref: '#/components/schemas/IdentifierValue'
-      required:
-        - identifier
+        identifiers:
+          type: array
+          items:
+            type: object
+            properties:
+              identifier:
+                $ref: '#/components/schemas/IdentifierValue'
+              scope:
+                type: string
+            required:
+              - identifier
+              - scope
+      oneOf:
+        - required:
+          - identifier
+        - required:
+          - identifiers
     Company:
       title: Company
       type: object
@@ -245,8 +274,8 @@ components:
             unsubscribed_at:
               type: string
               format: date-time
-          required:
-            - identifier
+            properties:
+              type: object
         - oneOf:
           - properties:
               user:
