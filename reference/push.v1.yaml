@@ -384,6 +384,10 @@ security:
   - pushKey: []
 tags:
   - name: user
+    x-displayName: User
   - name: company
+    x-displayName: Company
   - name: relationship
+    x-displayName: Relationship
   - name: event
+    x-displayName: Event
