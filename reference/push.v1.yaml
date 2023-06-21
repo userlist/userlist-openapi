@@ -25,7 +25,7 @@ paths:
       description: Create or update a user.
       responses:
         '202':
-          description: Accepted
+          $ref: '#/components/responses/Accepted'
         '401':
           $ref: '#/components/responses/Unauthorized'
         '422':
@@ -44,9 +44,11 @@ paths:
         description: Post the necessary fields for the API to delete a user.
       responses:
         '202':
-          description: Accepted
+          $ref: '#/components/responses/Accepted'
         '401':
           $ref: '#/components/responses/Unauthorized'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
       tags:
         - user
   /companies:
@@ -63,7 +65,7 @@ paths:
       description: Create or update a company.
       responses:
         '202':
-          description: Accepted
+          $ref: '#/components/responses/Accepted'
         '401':
           $ref: '#/components/responses/Unauthorized'
         '422':
@@ -82,9 +84,11 @@ paths:
         description: Post the necessary fields for the API to delete a company.
       responses:
         '202':
-          description: Accepted
+          $ref: '#/components/responses/Accepted'
         '401':
           $ref: '#/components/responses/Unauthorized'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
       tags:
         - company
   /relationships:
@@ -95,7 +99,7 @@ paths:
         - relationship
       responses:
         '202':
-          description: Accepted
+          $ref: '#/components/responses/Accepted'
         '401':
           $ref: '#/components/responses/Unauthorized'
         '422':
@@ -131,9 +135,11 @@ paths:
         description: Post the necessary fields for the API to delete a relationship.
       responses:
         '202':
-          description: Accepted
+          $ref: '#/components/responses/Accepted'
         '401':
           $ref: '#/components/responses/Unauthorized'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
       tags:
         - relationship
   /events:
@@ -144,7 +150,7 @@ paths:
         - event
       responses:
         '202':
-          description: Accepted
+          $ref: '#/components/responses/Accepted'
         '401':
           $ref: '#/components/responses/Unauthorized'
         '422':
@@ -331,6 +337,8 @@ components:
       in: header
       description: Prefix the Push Key with the keyword "Push" to indicate its type.
   responses:
+    Accepted:
+      description: Accepted
     Unauthorized:
       description: Unauthorized
       content:
