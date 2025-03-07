@@ -165,9 +165,9 @@ paths:
 components:
   schemas:
     IdentifierValue:
-      type:
-        - string
-        - number
+      oneOf:
+        - type: "string"
+        - type: "number"
     BaseUser:
       allOf:
         - type: object
